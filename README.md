@@ -1,2 +1,3 @@
 # SC-FEGAN_face_first_edit
-to be done 
+This is not the official implementation of the SC-FEGAN paper!
+It's just an attempt 
