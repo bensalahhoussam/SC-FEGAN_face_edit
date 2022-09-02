@@ -5,11 +5,11 @@ from sn import SpectralNormalization
 
 def dis_conv(x):
     x = SpectralNormalization(Conv2D(64, (3, 3),strides=1,padding="same", activation=LeakyReLU(alpha=0.1)))(x)
-    x = SpectralNormalization(Conv2D(128, (3, 3), strides=2,padding="same",activation=LeakyReLU(alpha=0.1) ))(x)
-    x = SpectralNormalization(Conv2D(256, (3, 3), strides=2,padding="same",activation=LeakyReLU(alpha=0.1) ))(x)
-    x = SpectralNormalization(Conv2D(256, (3, 3), strides=2,padding="same",activation=LeakyReLU(alpha=0.1)))(x)
-    x = SpectralNormalization(Conv2D(256, (3, 3),strides=2, padding="same",activation=LeakyReLU(alpha=0.1)))(x)
-    x = SpectralNormalization(Conv2D(256, (3, 3), strides=2,padding="same",activation=LeakyReLU(alpha=0.1)))(x)
+    x = SpectralNormalization(Conv2D(64*2, (3, 3), strides=2,padding="same",activation=LeakyReLU(alpha=0.1) ))(x)
+    x = SpectralNormalization(Conv2D(64*4, (3, 3), strides=2,padding="same",activation=LeakyReLU(alpha=0.1) ))(x)
+    x = SpectralNormalization(Conv2D(64*4, (3, 3), strides=2,padding="same",activation=LeakyReLU(alpha=0.1)))(x)
+    x = SpectralNormalization(Conv2D(64*4, (3, 3),strides=2, padding="same",activation=LeakyReLU(alpha=0.1)))(x)
+    x = SpectralNormalization(Conv2D(64*4, (3, 3), strides=2,padding="same",activation=LeakyReLU(alpha=0.1)))(x)
     return x
 
 inputs = Input(shape=(512,512,5))
