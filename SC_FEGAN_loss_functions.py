@@ -17,13 +17,6 @@ def get_vgg16_layers(layers_names):
     return model
 
 
-def compute_content_cost(content_output, generated_output):
-    m, n_H, n_W, n_C = content_output.get_shape().as_list()
-    a_C_unrolled = tf.reshape(content_output, shape=[m, n_H * n_W, n_C])
-    a_G_unrolled = tf.reshape(generated_output, shape=[m, n_H * n_W, n_C])
-    J_content = tf.reduce_sum(tf.square(a_C_unrolled - a_G_unrolled)) / (4.0 * n_H * n_W * n_C)
-    return J_content
-
 def total_variation_loss(complete_image):
     
     x_var = complete_image[:, :, 1:, :] - complete_image[:, :, :-1, :]
@@ -89,8 +82,6 @@ def per_pixel_loss(gen_output_image, ground_truth_image):
 def gsn_loss(complete_image):
     gen_loss = - tf.reduce_mean(complete_image)
     return gen_loss
-
-
 
 
 
