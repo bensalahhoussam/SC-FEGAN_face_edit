@@ -1,6 +1,6 @@
 import tensorflow as tf
 from tensorflow.keras.models import Model
-from gated_conv import Gated_Conv_2D,Gated_deconv_2d
+from gated_conv import Gated_Convolutional,Gated_Deconvolutional
 from tensorflow.keras.layers import Activation, Input, Conv2D, LeakyReLU, Multiply, Conv2DTranspose, Concatenate
 from tensorflow.keras.utils import plot_model
 
