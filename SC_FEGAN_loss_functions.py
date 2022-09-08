@@ -24,6 +24,11 @@ def compute_content_cost(content_output, generated_output):
     J_content = tf.reduce_sum(tf.square(a_C_unrolled - a_G_unrolled)) / (4.0 * n_H * n_W * n_C)
     return J_content
 
+def total_variation_loss(complete_image):
+    
+    x_var = complete_image[:, :, 1:, :] - complete_image[:, :, :-1, :]
+    y_var = complete_image[:, 1:, :, :] - complete_image[:, :-1, :, :]
+    return x_var, y_var
 
 def gram_matrix(tensor):
     """tensor shape is [batch,channels,width*height]"""
