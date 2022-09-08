@@ -5,39 +5,68 @@ from tensorflow.keras.utils import plot_model
 
 
 
-def Gated_Conv_2D(x_layer, filters, lrn=True, dilation_rate=1, strides=2, num_block=1,act=True):
-    x_feature = Conv2D(filters=filters, kernel_size=3, padding="same", strides=strides, dilation_rate=dilation_rate,
-                       name="conv_1_" + str(num_block))(x_layer)
-    if lrn is True:
-        x_feature = tf.nn.local_response_normalization(x_feature,  bias=0.00005,
-                                       name="LRN_1_" + str(num_block))
-    if act==True:
-        x_feature = LeakyReLU(alpha=0.1)(x_feature)
+class Gated_Convolutional(Model):
+
+    def __init__(self, filters, num_block, strides, dilation_rate, lrn=True, activation=True):
+        super(Gated_Convolutional, self).__init__()
+        self.lrn = lrn
+        self.act = activation
+        self.num_block = num_block
+
+        self.x_feature = Conv2D(filters=filters, kernel_size=3, padding="same", strides=strides,
+                                dilation_rate=dilation_rate, name="conv_" + str(self.num_block))
+        self.activation = LeakyReLU(alpha=0.1)
+
+        self.x_gating = Conv2D(filters=filters, kernel_size=3, padding="same", strides=strides,
+                               dilation_rate=dilation_rate, name="gated_conv_" + str(self.num_block))
+        self.sigmoid = Activation("sigmoid", name="sigmoid_" + str(self.num_block))
+
+        self.multiply = Multiply(name="multiplication_layer_" + str(self.num_block))
+
+    def call(self, input_tensor, training=True, **kwargs):
+
+        x_feature = self.x_feature(input_tensor)
+
+        if self.lrn:
+            x_feature = tf.nn.local_response_normalization(x_feature, bias=0.00005,
+                                                           name="LRN_" + str(self.num_block))
+        if self.act:
+            x_feature = self.activation(x_feature)
+
+        x_gating = self.x_gating(input_tensor)
+        x_gating = self.sigmoid(x_gating)
+
+        output = self.multiply([x_gating, x_feature])
+
+        return output
 
 
-    x_gating = Conv2D(filters=filters, kernel_size=3, padding="same", strides=strides,
-                      dilation_rate=dilation_rate, name="gated_conv_1_" + str(num_block))(x_layer)
-    x_gating = Activation("sigmoid", name="sigmoid_1_" + str(num_block))(x_gating)
+class Gated_Deconvolutional(Model):
+    def __init__(self, filters, num_block, strides, dilation_rate, lrn=True):
+        super(Gated_Deconvolutional, self).__init__()
+        self.lrn = lrn
+        self.num_block = num_block
 
+        self.x_feature = Conv2DTranspose(filters=filters, kernel_size=3, padding="same", strides=strides,
+                                         dilation_rate=dilation_rate, use_bias=True, name="deconv_" + str(num_block))
 
-    output = Multiply(name="multiplication_layer_1_" + str(num_block))([x_gating, x_feature])
+        self.activation = LeakyReLU(alpha=0.1)
 
-    return output
+        self.x_gating = Conv2DTranspose(filters=filters, kernel_size=3, padding="same", strides=2,
+                                        dilation_rate=dilation_rate, name="gated_deconv_" + str(num_block))
 
-def Gated_deconv_2d(x_layer, filters, dilation_rate=1, strides=2, num_block=1, lrn=True):
-    x_feature = Conv2DTranspose(filters=filters, kernel_size=3, padding="same", strides=strides,
-                                dilation_rate=dilation_rate,use_bias=True,name="deconv_1_" + str(num_block))(x_layer)
-    if lrn is True:
-        x_feature = tf.nn.local_response_normalization(x_feature,  bias=0.00005,
-                                                      name="LRN_1_" + str(num_block))
+        self.sigmoid = Activation("sigmoid", name="sigmoid_" + str(self.num_block))
 
-    x_feature = LeakyReLU(alpha=0.1)(x_feature)
+        self.multiply = Multiply(name="multiplication_layer_" + str(self.num_block))
 
-    x_gating = Conv2DTranspose(filters=filters, kernel_size=3, padding="same", strides=2,
-                      dilation_rate=dilation_rate, name="gated_deconv_1_" + str(num_block))(x_layer)
-    x_gating = Activation("sigmoid", name="de_sigmoid_1_" + str(num_block))(x_gating)
-
-
-    output = Multiply(name="de_multiplication_layer_1_" + str(num_block))([x_gating, x_feature])
-    return output
-
+    def call(self, input_tensor, training=True, **kwargs):
+        x_feature = self.x_feature(input_tensor)
+        if self.lrn:
+            x_feature = tf.nn.local_response_normalization(x_feature, bias=0.00005,
+                                                           name="LRN_" + str(self.num_block))
+        x_feature = self.activation(x_feature)
+        x_gating=self.x_gating(input_tensor)
+        x_gating=self.sigmoid(x_gating)
+        output=self.multiply([x_gating,x_feature])
+        return output
+        
