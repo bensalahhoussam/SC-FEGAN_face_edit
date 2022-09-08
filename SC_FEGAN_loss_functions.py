@@ -78,7 +78,7 @@ def perceptual_loss(gen_output_image, ground_truth_image):
 
 
 def per_pixel_loss(gen_output_image, ground_truth_image):
-    _, n_h, n_w, n_c = ground_truth_image[i].get_shape().as_list()
+    _, n_h, n_w, n_c = ground_truth_image.get_shape().as_list()
     term_1 = (1. / n_h * n_w * n_c) * (mask * (gen_output_image - ground_truth_image))
     term_2 = (1. / n_h * n_w * n_c) * ((1 - mask) * (gen_output_image - ground_truth_image))
     loss = term_1 + alpha * term_2
