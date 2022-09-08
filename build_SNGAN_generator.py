@@ -7,62 +7,107 @@ from tensorflow.keras.utils import plot_model
 
 
 
-def encoder_block(x_layer):
-    skip_1 =x_layer
-    x = Gated_Conv_2D(x_layer,filters=64*1, lrn=False, dilation_rate=1,strides=2, num_block=1)
-    skip_2 = x
-    x = Gated_Conv_2D(x,filters=64*2, lrn=True, dilation_rate=1,strides=2, num_block=2)
-    skip_3 = x
-    x = Gated_Conv_2D(x, filters=64*4, lrn=True, dilation_rate=1,strides=2,num_block=3)
-    skip_4 = x
-    x = Gated_Conv_2D(x, filters=64*8, lrn=True, dilation_rate=1, num_block=4)
-    skip_5 = x
-    x = Gated_Conv_2D(x, filters=64*8, lrn=True, dilation_rate=1, num_block=5)
-    skip_6 = x
-    x = Gated_Conv_2D(x, filters=64*8, lrn=True, dilation_rate=1, num_block=6)
-    skip_7 = x
-    x = Gated_Conv_2D(x, filters=64*8, lrn=True, dilation_rate=1, num_block=7)
-    # dilated Gated convolutional layers
-    x = Gated_Conv_2D(x, filters=64*8, lrn=True, dilation_rate=2, strides=1, num_block=8)
+class Encoder_Block(Model):
+    def __init__(self, ):
+        super(Encoder_Block, self).__init__()
+        self.x_gated_conv_1 = Gated_Convolutional(filters=64 * 1, lrn=False, dilation_rate=1, strides=2, num_block=1)
+        self.x_gated_conv_2 = Gated_Convolutional(filters=64 * 2, lrn=True, dilation_rate=1, strides=2, num_block=2)
+        self.x_gated_conv_3 = Gated_Convolutional(filters=64 * 4, lrn=True, dilation_rate=1, strides=2, num_block=3)
+        self.x_gated_conv_4 = Gated_Convolutional(filters=64 * 8, lrn=True, dilation_rate=1, strides=2, num_block=4)
+        self.x_gated_conv_5 = Gated_Convolutional(filters=64 * 8, lrn=True, dilation_rate=1, strides=2, num_block=5)
+        self.x_gated_conv_6 = Gated_Convolutional(filters=64 * 8, lrn=True, dilation_rate=1, strides=2, num_block=6)
+        self.x_gated_conv_7 = Gated_Convolutional(filters=64 * 8, lrn=True, dilation_rate=1, strides=2, num_block=7)
 
-    x = Gated_Conv_2D(x, filters=64*8, lrn=True, dilation_rate=2, strides=1, num_block=9)
+        # dilated Gated convolutional layers
 
-    x = Gated_Conv_2D(x, filters=64*8, lrn=True, dilation_rate=2, strides=1, num_block=10)
+        self.x_gated_conv_8 = Gated_Convolutional(filters=64 * 8, lrn=True, dilation_rate=2, strides=1, num_block=8)
+        self.x_gated_conv_9 = Gated_Convolutional(filters=64 * 8, lrn=True, dilation_rate=2, strides=1, num_block=9)
+        self.x_gated_conv_10 = Gated_Convolutional(filters=64 * 8, lrn=True, dilation_rate=2, strides=1, num_block=10)
+        self.x_gated_conv_11 = Gated_Convolutional(filters=64 * 8, lrn=True, dilation_rate=2, strides=1, num_block=11)
 
-    x = Gated_Conv_2D(x, filters=64*8, lrn=True, dilation_rate=2, strides=1, num_block=11)
-    return x, skip_1, skip_2, skip_3, skip_4, skip_5, skip_6, skip_7
-def decoder_block(x, skip_1, skip_2, skip_3, skip_4, skip_5, skip_6, skip_7):
-    x = Gated_deconv_2d(x, filters=64*8, lrn=True, dilation_rate=1, num_block=1)
-    x = Concatenate(axis=-1)([x, skip_7])
-    x = Gated_Conv_2D(x, filters=64*8, lrn=True, dilation_rate=1,strides=1, num_block=12)
+    def call(self, inputs, training=True, **kwargs):
+        skip_1 = inputs
+        x = self.x_gated_conv_1(inputs)
+        skip_2 = x
+        x = self.x_gated_conv_2(x)
+        skip_3 = x
+        x = self.x_gated_conv_3(x)
+        skip_4 = x
+        x = self.x_gated_conv_4(x)
+        skip_5 = x
+        x = self.x_gated_conv_5(x)
+        skip_6 = x
+        x = self.x_gated_conv_6(x)
+        skip_7 = x
+        x = self.x_gated_conv_7(x)
 
-    x = Gated_deconv_2d(x, filters=64*8, lrn=True, dilation_rate=1, num_block=2)
-    x = Concatenate(axis=-1)([x, skip_6])
-    x = Gated_Conv_2D(x, filters=64*8, lrn=True, dilation_rate=1,strides=1, num_block=13)
+        x = self.x_gated_conv_8(x)
+        x = self.x_gated_conv_9(x)
+        x = self.x_gated_conv_10(x)
+        x = self.x_gated_conv_11(x)
+        return x, skip_1, skip_2, skip_3, skip_4, skip_5, skip_6, skip_7
 
-    x = Gated_deconv_2d(x, filters=64*8, lrn=True, dilation_rate=1, num_block=3)
-    x = Concatenate(axis=-1)([x, skip_5])
-    x = Gated_Conv_2D(x, filters=64*8, lrn=True, dilation_rate=1,strides=1, num_block=14)
 
-    x = Gated_deconv_2d(x, filters=64*4, lrn=True, dilation_rate=1, num_block=4)
-    x = Concatenate(axis=-1)([x, skip_4])
-    x = Gated_Conv_2D(x, filters=64*4, lrn=True, dilation_rate=1,strides=1, num_block=15)
 
-    x = Gated_deconv_2d(x, filters=64*2, lrn=True, dilation_rate=1, num_block=5)
-    x = Concatenate(axis=-1)([x, skip_3])
-    x = Gated_Conv_2D(x, filters=64*2, lrn=True, dilation_rate=1,strides=1, num_block=16)
 
-    x = Gated_deconv_2d(x, filters=64*1, lrn=True, dilation_rate=1, num_block=6)
-    x = Concatenate(axis=-1)([x, skip_2])
-    x = Gated_Conv_2D(x, filters=64*1, lrn=True, dilation_rate=1,strides=1, num_block=17)
+class Decoder_Block(Model):
+    def __init__(self, ):
+        super(Decoder_Block, self).__init__()
+        self.x_gated_deconv_1 = Gated_Deconvolutional(filters=64 * 8, lrn=True, dilation_rate=1, strides=2, num_block=1)
+        self.concat = Concatenate(axis=-1)
+        self.x_gated_conv_12 = Gated_Convolutional(filters=64 * 8, lrn=True, dilation_rate=1, strides=1, num_block=12)
 
-    x = Gated_deconv_2d(x, filters=3, lrn=True, dilation_rate=1, num_block=7)
-    x = Concatenate(axis=-1)([x, skip_1])
-    x = Gated_Conv_2D(x, filters=3, lrn=False, dilation_rate=1,strides=1, num_block=18,act=False)
+        self.x_gated_deconv_2 = Gated_Deconvolutional(filters=64 * 8, lrn=True, dilation_rate=1, strides=2, num_block=2)
+        self.x_gated_conv_13 = Gated_Convolutional(filters=64 * 8, lrn=True, dilation_rate=1, strides=1, num_block=13)
 
-    x=Activation("tanh")(x)
-    return x
+        self.x_gated_deconv_3 = Gated_Deconvolutional(filters=64 * 8, lrn=True, dilation_rate=1, strides=2, num_block=3)
+        self.x_gated_conv_14 = Gated_Convolutional(filters=64 * 8, lrn=True, dilation_rate=1, strides=1, num_block=14)
 
+        self.x_gated_deconv_4 = Gated_Deconvolutional(filters=64 * 4, lrn=True, dilation_rate=1, strides=2, num_block=4)
+        self.x_gated_conv_15 = Gated_Convolutional(filters=64 * 4, lrn=True, dilation_rate=1, strides=1, num_block=15)
+
+        self.x_gated_deconv_5 = Gated_Deconvolutional(filters=64 * 2, lrn=True, dilation_rate=1, strides=2, num_block=5)
+        self.x_gated_conv_16 = Gated_Convolutional(filters=64 * 2, lrn=True, dilation_rate=1, strides=1, num_block=16)
+
+        self.x_gated_deconv_6 = Gated_Deconvolutional(filters=64 * 1, lrn=True, dilation_rate=1, strides=2, num_block=6)
+        self.x_gated_conv_17 = Gated_Convolutional(filters=64 * 1, lrn=True, dilation_rate=1, strides=1, num_block=17)
+
+        self.x_gated_deconv_7 = Gated_Deconvolutional(filters=3, lrn=True, dilation_rate=1, strides=2, num_block=7)
+        self.x_gated_conv_18 = Gated_Convolutional(filters=3, lrn=True, dilation_rate=1, strides=1, num_block=18,
+                                                 activation=False)
+
+        self.tanh = Activation("tanh")
+
+    def call(self, inputs, training=True,**kwargs):
+        x = self.x_gated_deconv_1(inputs[0])
+        x = self.concat([x,inputs[7]])
+        x = self.x_gated_conv_12(x)
+
+        x = self.x_gated_deconv_2(x)
+        x = self.concat([x, inputs[6]])
+        x = self.x_gated_conv_13(x)
+
+        x = self.x_gated_deconv_3(x)
+        x = self.concat([x, inputs[5]])
+        x = self.x_gated_conv_14(x)
+
+        x = self.x_gated_deconv_4(x)
+        x = self.concat([x, inputs[4]])
+        x = self.x_gated_conv_15(x)
+
+        x = self.x_gated_deconv_5(x)
+        x = self.concat([x, inputs[3]])
+        x = self.x_gated_conv_16(x)
+
+        x = self.x_gated_deconv_6(x)
+        x = self.concat([x, inputs[2]])
+        x = self.x_gated_conv_17(x)
+
+        x = self.x_gated_deconv_7(x)
+        x = self.concat([x, inputs[1]])
+        x = self.x_gated_conv_18(x)
+        output=self.tanh(x)
+        return output
 
 def generator():
     input = Input(shape=(512, 512, 9))
