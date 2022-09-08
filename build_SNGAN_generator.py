@@ -109,12 +109,16 @@ class Decoder_Block(Model):
         output=self.tanh(x)
         return output
 
-def generator():
-    input = Input(shape=(512, 512, 9))
-    last_layer, skip_1, skip_2, skip_3, skip_4, skip_5, skip_6, skip_7 = encoder_block(input)
-    output = decoder_block(last_layer, skip_1, skip_2, skip_3, skip_4, skip_5, skip_6, skip_7)
-    model=Model(inputs=input,outputs=output)
-    return model
+class Generator():
+    def __init__(self, ):
+        super(Generator, self).__init__()
+        self.encoder=Encoder_Block()
+        self.decoder=Decoder_Block()
+    def call(self, inputs, ,training=True,**kwargs):
+        x = self.encoder(inputs)
+        output = self.decoder(x)
+        model = Model(inputs=inputs, outputs=output)
+        return model
 
 model=generator()
 print(model.summary())
