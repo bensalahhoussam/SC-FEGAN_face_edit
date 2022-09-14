@@ -127,6 +127,12 @@ def generator_loss_function(generated_image,ground_truth,incomplete_image,mask):
     return overall_loss
 
 
+def averaged_samples(real,fake):
+    alpha = K.random_uniform((batch_size, 1, 1, 1))
+    return (alpha * real) + ((1 - alpha) * fake)
+
+
+
 def gp_loss(y_true, y_pred, averaged_samples):
     gradients = K.gradients(y_pred, averaged_samples)[0]
     gradients_sqr = K.square(gradients)
