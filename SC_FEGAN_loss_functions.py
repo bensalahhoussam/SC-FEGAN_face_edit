@@ -127,6 +127,14 @@ def generator_loss_function(generated_image,ground_truth,incomplete_image,mask):
     return overall_loss
 
 
+def gp_loss(y_true, y_pred, averaged_samples):
+    gradients = K.gradients(y_pred, averaged_samples)[0]
+    gradients_sqr = K.square(gradients)
+    gradients_sqr_sum = K.sum(gradients_sqr,
+                            axis=np.arange(1, len(gradients_sqr.shape)))
+    gradient_l2_norm = K.sqrt(gradients_sqr_sum)
+    gradient_penalty = K.square(1 - gradient_l2_norm)
+    return K.mean(gradient_penalty)
 
 
 
