@@ -84,7 +84,12 @@ print(f"noise shape : {data_1[4].shape}")
 
 
 
-
+total_batch shape : (50, 512, 512, 9)
+incomplete_images shape : (50, 512, 512, 3)
+sketch shape : (50, 512, 512, 1)
+color shape : (50, 512, 512, 3)
+mask shape : (50, 512, 512, 1)
+noise shape : (50, 512, 512, 1)
 
 
 
