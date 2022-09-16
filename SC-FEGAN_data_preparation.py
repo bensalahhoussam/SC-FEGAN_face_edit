@@ -15,8 +15,6 @@ def get_hair_mask(pic):
     component_mask = np.zeros(tuple(img.shape[:-1]))
     component_mask[parsed[0] == 17] = 1
     component_mask = np.reshape(component_mask, (img.shape[0], img.shape[1], 1))
-
-
     return component_mask.astype("float32")
 
 def create_mask(pic, number_of_mask=5):
