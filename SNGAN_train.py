@@ -19,11 +19,13 @@ input_gen = data.total_input
 ground_truth = data.ground_truth
 batch_data = data.batch_data
 
-incomplete_image = batch_data[0]
-sketch = batch_data[1]
-color = batch_data[2]
-mask = batch_data[3]
-noise = batch_data[4]
+def data_split(batch_data):
+    incomplete_image,sketch ,color ,mask,noise = batch_data[0],batch_data[1],batch_data[2],batch_data[3],\
+                                                 batch_data[4]
+    return incomplete_image,sketch,color,mask,noise
+
+
+incomplete_image,sketch,color,mask,noise=data_split(batch_data)
 
 output_gen = model_generator(input_gen)
 complete_image = data.complete_image(output_gen)
@@ -32,15 +34,3 @@ loss=overall_loss(output_gen,ground_truth,complete_image,mask)
 print(loss)
 
 
-"""print("*" * 50)
-print(f"ground_truth shape : {ground_truth.shape}")
-print(f"batch_input shape : {input_gen.shape}")
-print(f"generator_output shape : {output_gen.shape}")
-print(f"discriminator input shape : {input_dis.shape}")
-print(f"discriminator output shape : {output_dis.shape}")
-print("*" * 50)
-print(f"incomplete_images shape : {data_1[0].shape}")
-print(f"sketch shape : {data_1[1].shape}")
-print(f"color shape : {data_1[2].shape}")
-print(f"mask shape : {data_1[3].shape}")
-print(f"noise shape : {data_1[4].shape}")"""
