@@ -85,15 +85,18 @@ def style_loss(gen_output_image):
     return l_style_gen
 
 def total_variation_loss(complete_image,mask):
+    h,w,c=complete_image[1:]
     completed=tf.multiply(complete_image,mask)
     zero = tf.constant(0, dtype=tf.float32)
     where = tf.not_equal(completed, zero)
     region = tf.where(where)
 
-    x_var = tf.reduce_sum([tf.reduce_sum(complete_image[:, i+1, j, :] - complete_image[:, i, j, :]) for i in region[0] for j in region[1]])
-    x_var=x_var/tf.size(complete_image[1:])
-    y_var = tf.reduce_sum([tf.reduce_sum(complete_image[:, i, j+1, :] - complete_image[:, i, j, :]) for i in region[0] for j in region[1]])
-    y_var=y_var/tf.size(complete_image[1:])
+    x_var = tf.reduce_sum([tf.reduce_sum(complete_image[:, i+1, j, :] - complete_image[:, i, j, :]) for i in region[1] for j in region[2]])
+    x_var=x_var/(w*h*c)
+    y_var = tf.reduce_sum([tf.reduce_sum(complete_image[:, i, j+1, :] - complete_image[:, i, j, :]) for i in region[1] for j in region[2]])
+    y_var = y_var / (w*h*c)
+    loss=x_var+y_var
+    return loss
 
 
     return x_var+ y_var
