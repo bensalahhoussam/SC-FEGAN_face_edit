@@ -3,6 +3,7 @@ import numpy as np
 import cv2 as cv
 import matplotlib.pyplot as plt
 import tensorflow as tf
+import tensorflow_io as tfio
 from keras.layers import Input
 from build_SNGAN_generator import Generator
 from build_SNGAN_discriminator import Discriminator
