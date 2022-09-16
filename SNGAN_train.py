@@ -53,21 +53,34 @@ class Data_Preparation:
             noises.append(self.path + data_folder[3] + "/" + noise_path)
         return images, edges, colors, masks, noises
 
-    def data_batch(self, ):
+     def data_batch(self, ):
         total_batch = []
-        for i in range(len(self.total_sketch[0:10])):
+        for i in range(len(self.total_sketch[0:1])):
             image = cv.cvtColor(cv.imread(self.total_images[i]), cv.COLOR_BGR2RGB)
+            image=image.astype("float32")/127.5 - 1
+
             sketch = cv.imread(self.total_sketch[i])
             sketch = sketch[..., 0:1]
+            sketch = sketch.astype("float32")/255.
+
             color = cv.cvtColor(cv.imread(self.total_color[i]), cv.COLOR_BGR2RGB)
+            color = color.astype("float32")/255.
+
             mask = cv.imread(self.total_mask[i])
             mask = mask[..., 0:1]
+            mask = mask.astype("float32")/255.
             noise = cv.imread(self.total_noise[i])
             noise = noise[..., 0:1]
-            batch_input = np.concatenate([image, sketch, color, mask, noise], axis=-1)
+            noise = noise.astype("float32")/255.
+
+            batch_input = tf.concat([image, sketch, color, mask, noise], axis=-1)
             total_batch.append(batch_input)
         total_batch = np.array(total_batch)
         return total_batch
+
+    def complete_image(self,output_gen):
+        image = self.incomplete_image + (self.mask * output_gen)
+        return image
 
 
 data = Data_Preparation(path)
