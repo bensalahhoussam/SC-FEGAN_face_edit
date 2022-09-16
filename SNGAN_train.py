@@ -53,30 +53,32 @@ class Data_Preparation:
             noises.append(self.path + data_folder[3] + "/" + noise_path)
         return images, edges, colors, masks, noises
 
-     def data_batch(self, ):
+         def data_batch(self, ):
         total_batch = []
         for i in range(len(self.total_sketch[0:1])):
-            image = cv.cvtColor(cv.imread(self.total_images[i]), cv.COLOR_BGR2RGB)
-            image=image.astype("float32")/127.5 - 1
+            pic = tf.image.decode_jpeg(tf.io.read_file(self.total_images[i]), channels=3)
+            pic = tfio.experimental.color.bgr_to_rgb(pic)
+            pic = tf.cast(pic, dtype=tf.float32) / 127.5 - 1.
 
-            sketch = cv.imread(self.total_sketch[i])
-            sketch = sketch[..., 0:1]
-            sketch = sketch.astype("float32")/255.
+            sketch = tf.image.decode_jpeg(tf.io.read_file(self.total_sketch[i]), channels=1)
+            sketch = tf.cast(sketch, dtype=tf.float32) / 255.
 
-            color = cv.cvtColor(cv.imread(self.total_color[i]), cv.COLOR_BGR2RGB)
-            color = color.astype("float32")/255.
+            color = tf.image.decode_jpeg(tf.io.read_file(self.total_color[i]), channels=3)
+            color = tfio.experimental.color.bgr_to_rgb(color)
+            color = tf.cast(color, dtype=tf.float32) / 255.
 
-            mask = cv.imread(self.total_mask[i])
-            mask = mask[..., 0:1]
-            mask = mask.astype("float32")/255.
-            noise = cv.imread(self.total_noise[i])
-            noise = noise[..., 0:1]
-            noise = noise.astype("float32")/255.
+            mask = tf.image.decode_jpeg(tf.io.read_file(self.total_mask[i]),channels=1)
+            mask = tf.cast(mask, dtype=tf.float32) / 255.
 
-            batch_input = tf.concat([image, sketch, color, mask, noise], axis=-1)
+
+            noise = tf.image.decode_jpeg(tf.io.read_file(self.total_noise[i]),channels=1)
+            noise = tf.cast(noise, dtype=tf.float32) / 255.
+
+            batch_input = tf.concat([pic, sketch, color, mask, noise], axis=-1)
             total_batch.append(batch_input)
-        total_batch = np.array(total_batch)
+        total_batch = tf.stack(total_batch,axis=0)
         return total_batch
+
 
     def complete_image(self,output_gen):
         image = self.incomplete_image + (self.mask * output_gen)
