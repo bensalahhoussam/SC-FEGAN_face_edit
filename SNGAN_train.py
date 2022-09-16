@@ -30,31 +30,3 @@ output_gen = model_generator(input_gen)
 complete_image = data.complete_image(output_gen)
 
 gen_loss=generator_loss_function(output_gen,ground_truth,complete_image,mask)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"""print("*" * 50)
-print(f"ground_truth shape : {ground_truth.shape}")
-print(f"batch_input shape : {input_gen.shape}")
-print(f"generator_output shape : {output_gen.shape}")
-print(f"discriminator input shape : {input_dis.shape}")
-print(f"discriminator output shape : {output_dis.shape}")
-print("*" * 50)
-print(f"incomplete_images shape : {data_1[0].shape}")
-print(f"sketch shape : {data_1[1].shape}")
-print(f"color shape : {data_1[2].shape}")
-print(f"mask shape : {data_1[3].shape}")
-print(f"noise shape : {data_1[4].shape}")"""
