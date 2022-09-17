@@ -15,19 +15,20 @@ model_generator, model_discriminator = model()
 
 data = Data_Preparation(path)
 
-input_gen = data.total_input
-ground_truth = data.ground_truth
-batch_data = data.batch_data
+def data_split(data):
+    input_gen = data.total_input
+    ground_truth = data.ground_truth
+    batch_data = data.batch_data
 
-def data_split(batch_data):
     incomplete_image,sketch ,color ,mask,noise = batch_data[0],batch_data[1],batch_data[2],batch_data[3],\
                                                  batch_data[4]
-    return incomplete_image,sketch,color,mask,noise
 
+    return input_gen,ground_truth,incomplete_image,sketch,color,mask,noise
 
-incomplete_image,sketch,color,mask,noise=data_split(batch_data)
+input_gen,ground_truth,incomplete_image,sketch,color,mask,noise=data_split(data)
 
 output_gen = model_generator(input_gen)
+
 complete_image = data.complete_image(output_gen)
 
 loss=overall_loss(output_gen,ground_truth,complete_image,mask)
