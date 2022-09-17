@@ -33,7 +33,6 @@ complete_image = data.complete_image(output_gen)
 batch_neg=tf.concat([complete_image,mask,sketch],axis=-1)
 batch_pos=tf.concat([ground_truth,mask,sketch],axis=-1)
 batch_global=tf.concat([batch_pos,batch_neg],axis=0)
-print(batch_global.shape)
 dis_real_fake=model_discriminator(batch_global)
 dis_real,dis_fake = tf.split(dis_real_fake,2)
 
@@ -44,13 +43,3 @@ print(dis_loss)
 
 
 
-"""print("*" * 50)
-print(f"ground_truth shape : {ground_truth.shape}")
-print(f"batch_input shape : {input_gen.shape}")
-print(f"generator_output shape : {output_gen.shape}")
-print("*" * 50)
-print(f"incomplete_images shape : {incomplete_image.shape}")
-print(f"sketch shape : {sketch.shape}")
-print(f"color shape : {color.shape}")
-print(f"mask shape : {mask.shape}")
-print(f"noise shape : {noise.shape}")"""
