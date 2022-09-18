@@ -144,6 +144,17 @@ def discriminator_loss(dis_real, dis_fake):
                tf.reduce_mean(tf.maximum(1 + dis_fake, 0))
     return dis_loss
 
+
+def total_dis_loss(dis_real,dis_fake,model_discriminator,ground_truth,complete_image,mask):
+
+    dis_loss=gan_hinge_loss(dis_real,dis_fake)+10.*\
+         gradient_penalty(model_discriminator,ground_truth,complete_image,mask)
+    return dis_loss
+
+
+
+
+
 def gradient_penalty(model,ground_truth, complete_image, mask):
     batch,w,h,c = ground_truth.get_shape().as_list()
 
