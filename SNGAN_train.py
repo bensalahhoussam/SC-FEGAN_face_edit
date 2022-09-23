@@ -39,6 +39,8 @@ def data_distrution(input):
 
 
 model_generator,model_discriminator = model()
+edges_detection = load_data()
+
 
 generator_optimizer = Adam(1e-4, beta_1=0.1, beta_2=0.999)
 discriminator_optimizer = Adam(1e-4, beta_1=0.1, beta_2=0.999)
@@ -61,8 +63,10 @@ def train_one_batch(input_gen,mask,incomplete_image,ground_truth,sketch):
         complete_image = incomplete_image + (mask * gen_output)
 
         true_mask = tf.ones_like(complete_image)[...,0:1]
+        true_sketch = edges_detection.edges_detection(ground_truth)
 
-        batch_pos= tf.concat([ground_truth,true_mask,true_mask],axis=-1)
+
+        batch_pos= tf.concat([ground_truth,true_sketch,true_mask],axis=-1)
         batch_neg = tf.concat([complete_image,sketch,mask], axis=-1)
 
         dis_real = model_discriminator(batch_pos)
