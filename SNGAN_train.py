@@ -99,7 +99,7 @@ def train_data_for_one_epoch():
         pbar.update()
     return gen_losses,dis_losses
 
-
+def training_fit(epochs=2):
     epochs_gen_losses, epochs_dis_losses = [], []
 
     for epoch in range(epochs):
