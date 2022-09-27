@@ -100,7 +100,20 @@ def train_data_for_one_epoch():
     return gen_losses,dis_losses
 
 
-gen_losses,dis_losses=train_data_for_one_epoch()
+    epochs_gen_losses, epochs_dis_losses = [], []
+
+    for epoch in range(epochs):
+        print(f"Start of epoch number : {epoch}")
+        gen_losses,dis_losses = train_data_for_one_epoch()
+        epochs_gen_losses.append(np.mean(gen_losses))
+        epochs_dis_losses.append(np.mean(dis_losses))
+        print(f'Epoch {epoch}: gen_loss: {np.mean(gen_losses):0.4f}  dis_loss: {np.mean(dis_losses):.4f}')
+        model_generator.save_weights(f"model_weights/gen_model_epcoch_{epoch}.h5")
+        model_discriminator.save_weights(f"model_weights/dis_model_epcoch_{epoch}.h5")
+        print("models saved")
+
+
+training_fit()
 
 
 
