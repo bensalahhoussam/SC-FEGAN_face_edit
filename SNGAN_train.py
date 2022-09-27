@@ -50,11 +50,7 @@ mask_data = data_distrution(mask)
 real_data = data_distrution(ground_truth)
 sketch_data = data_distrution(sketch)
 color_data = data_distrution(color)
-print(len(color_data))
-total=len(list(enumerate(input_data)))
-print(total)
-for p in color_data:
-    print(p.shape)
+
 
 def apply_gradient(input_gen,mask,incomplete_image,ground_truth,sketch,color):
     with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:
@@ -105,7 +101,6 @@ def train_data_for_one_epoch():
 
 
 gen_losses,dis_losses=train_data_for_one_epoch()
-print(gen_losses,dis_losses)
 
 
 
