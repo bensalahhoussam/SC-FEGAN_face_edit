@@ -82,7 +82,6 @@ def apply_gradient(input_gen,mask,incomplete_image,ground_truth,sketch,color):
 
         return output_gen,gen_loss,dis_loss
 
-
 def train_data_for_one_epoch():
     dis_losses = []
     gen_losses = []
@@ -90,12 +89,16 @@ def train_data_for_one_epoch():
     pbar = tqdm(total=len(list(enumerate(input_data))), position=0, leave=True,
                 bar_format='{l_bar}{bar}| {n_fmt}/{total_fmt} ')
     for step, data in enumerate(zip(real_data, input_data, incomplete_data, mask_data, sketch_data, color_data)):
-        output_gen, gen_loss, dis_loss = apply_gradient(data[1], data[3], data[2], data[0], data[4], data[5])
+        start_time = time.time()
+        output_gen, gen_loss, dis_loss = apply_gradient(data[1],data[3],data[2],data[0],data[4],data[5])
+        elapsed = time.time() - start_time
+        minutes = int(elapsed // 60)
+        seconds = int(elapsed % 60)
 
         gen_losses.append(gen_loss.numpy())
         dis_losses.append(dis_loss.numpy())
 
-        pbar.set_description(f"Training loss for step {step}:gen_loss :{gen_loss} , dis_loss :{dis_loss:}")
+        pbar.set_description(f"Training loss for step_num {step},time:({minutes} min {seconds} sec) ,gen_loss:{gen_loss:0.4f},dis_loss:{dis_loss:0.4f}")
         pbar.update()
     return gen_losses,dis_losses
 
