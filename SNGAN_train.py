@@ -102,11 +102,7 @@ def train_data_for_one_epoch():
         pbar.update()
     return gen_losses,dis_losses
 
-def plot_history(epochs_gen_losses, epochs_dis_losses,num_epoch):
-    plt.figure(figsize=(15,15))
-    plt.plot(num_epoch, epochs_gen_losses,label='gen_loss',color='green')
-    plt.plot(num_epoch, epochs_dis_losses, label='dis_loss',color='red')
-    plt.show()
+
 
 
 def plot_history(epochs_gen_losses, epochs_dis_losses,num_epoch):
