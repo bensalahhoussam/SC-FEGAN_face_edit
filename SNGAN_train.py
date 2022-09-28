@@ -109,10 +109,20 @@ def plot_history(epochs_gen_losses, epochs_dis_losses,num_epoch):
     plt.show()
 
 
-def training_fit(epochs=2):
+def plot_history(epochs_gen_losses, epochs_dis_losses,num_epoch):
+    x=list(range(num_epoch))
+    plt.figure(figsize=(15,15))
+    plt.plot(x, epochs_gen_losses,label='gen_loss',color='green',marker='o')
+    plt.plot(x, epochs_dis_losses, label='dis_loss',color='red',marker='x')
+    plt.xlabel("epoch")
+    plt.ylabel("loss")
+    plt.legend()
+    plt.show()
+
+def training_fit(epochs=4):
     epochs_gen_losses, epochs_dis_losses = [], []
     for epoch in range(epochs):
-        print(f"Start of epoch number : {epoch}")
+        print(f"Start of epoch number : {epoch+1}")
         start_time = time.time()
         gen_losses,dis_losses = train_data_for_one_epoch()
         elapsed = time.time() - start_time
@@ -122,11 +132,16 @@ def training_fit(epochs=2):
         epochs_gen_losses.append(np.mean(gen_losses))
         epochs_dis_losses.append(np.mean(dis_losses))
 
-        print(f'Epoch {epoch}: gen_loss: {np.mean(gen_losses):0.3f}  dis_loss: {np.mean(dis_losses):.3f} time:({minutes} min {seconds} sec)')
-        model_generator.save_weights(f"model_weights/gen_model_epoch_{epoch}.h5")
-        model_discriminator.save_weights(f"model_weights/dis_model_epoch_{epoch}.h5")
+        print(f'Epoch {epoch+1}: gen_loss: {np.mean(gen_losses):0.3f}  dis_loss: {np.mean(dis_losses):.3f} time:({minutes} min {seconds} sec)')
 
-    plot_history(epochs_gen_losses,epochs_dis_losses,list(np.arange(len(epochs))))
+        os.mkdir(f"model_weights/epoch_{epoch+1}")
+        model_generator.save_weights(f"model_weights/epoch_{epoch+1}/gen_model_epoch_{epoch+1}.h5")
+        model_discriminator.save_weights(f"model_weights/epoch_{epoch+1}/dis_model_epoch_{epoch+1}.h5")
+
+    plot_history(epochs_gen_losses,epochs_dis_losses,epochs)
+
+
+training_fit()
 
 
 
