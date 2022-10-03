@@ -155,19 +155,20 @@ def total_dis_loss(dis_real,dis_fake,model_discriminator,ground_truth,complete_i
 
 
 
-def gradient_penalty(model,ground_truth, complete_image, mask):
-    batch,w,h,c = ground_truth.get_shape().as_list()
+
+def gradient_penalty(model, ground_truth, complete_image, mask):
+    batch, w, h, c = ground_truth.get_shape().as_list()
 
     alpha = tf.random.normal([batch, 1, 1, 1], 0.0, 1.0)
     diff = complete_image - ground_truth
-    interpolated = complete_image + alpha * diff
+    interpolated = (complete_image + alpha * diff) * mask
 
     with tf.GradientTape() as gp_tape:
         gp_tape.watch(interpolated)
         pred = model(interpolated, training=True)
     grads = gp_tape.gradient(pred, [interpolated])[0]
-    norm = tf.sqrt(tf.reduce_sum(tf.square(grads), axis=[1, 2, 3]))
-    gp = tf.reduce_mean((norm * mask - 1.0) ** 2)
+    norm = tf.sqrt(tf.reduce_sum(tf.square(grads)))
+    gp = tf.reduce_mean((norm - 1.0) ** 2)
     return gp
 
 
