@@ -146,9 +146,9 @@ def total_dis_loss(dis_real,dis_fake,model,ground_truth,complete_image,mask):
 
 
 def discriminator_loss(dis_real, dis_fake):
-    hinge_pos= tf.reduce_mean(tf.maximum(1 - dis_real, 0))
-    hinge_neg = tf.reduce_mean(tf.maximum(1 + dis_fake, 0))
-    return tf.add(0.5*hinge_pos,0.5*hinge_neg)
+    hinge_pos= tf.reduce_mean(1 - dis_real)
+    hinge_neg = tf.reduce_mean(1 + dis_fake)
+    return tf.add(hinge_pos,hinge_neg)
 
 
 def gradient_penalty(model, ground_truth, complete_image, mask):
