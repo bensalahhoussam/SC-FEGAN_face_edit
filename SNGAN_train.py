@@ -34,7 +34,7 @@ def data_split(data):
 
     return input_gen,ground_truth,incomplete_image,sketch,color,mask,noise
 def data_distrution(input):
-    data=tf.data.Dataset.from_tensor_slices((input)).batch(1,drop_remainder=True)
+    data=tf.data.Dataset.from_tensor_slices((input)).batch(6,drop_remainder=True)
     return data
 
 
