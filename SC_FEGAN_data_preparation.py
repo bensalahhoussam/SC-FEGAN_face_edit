@@ -171,7 +171,7 @@ class Data_Preparation:
     def data_batch(self, ):
         total_label = []
         total_batch = []
-        for i in range(len(self.total_sketch[1:6])):
+        for i in range(len(self.total_sketch)):
             actual = tf.image.decode_jpeg(tf.io.read_file(self.label[i]), channels=3)
             actual = tfio.experimental.color.bgr_to_rgb(actual)
             actual = (tf.cast(actual, dtype=tf.float32) / 127.5) - 1.0
@@ -203,18 +203,5 @@ class Data_Preparation:
         total_label = tf.stack(total_label, axis=0)
         return total_label, total_batch
 
-"""file = "D://Deep_Learning_projects/new_projects/computer_vision/project_3/dataset/"
-for i in range(4030,4040):
-    try:
-        data = load_data("D://CelebAMask-HQ/CelebAMask-HQ/CelebA-HQ-img/" + str(i) + ".jpg")
-        image, image_input, sketch_input, color_input, mask, noise_input = data.get_data()
-        cv.imwrite(file + f"/ground_truth/image_{i}.jpg", image)
-        cv.imwrite(file + f"/image_input/image_{i}.jpg", image_input)
-        cv.imwrite(file + f"/sketch_input/sketch_{i}.jpg", sketch_input)
-        cv.imwrite(file + f"/color_input/color_{i}.jpg", color_input)
-        cv.imwrite(file + f"/mask_input/mask_{i}.jpg", mask)
-        cv.imwrite(file + f"/noise_input/noise_{i}.jpg", noise_input * 255)
-    except:
-        pass"""
 
 
