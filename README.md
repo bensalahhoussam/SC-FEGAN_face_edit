@@ -9,5 +9,4 @@ Edit face images using a a deep neural network. Users can edit face images using
 ## References 
 
 https://doi.org/10.48550/arXiv.1804.07723 : Image Inpainting for Irregular Holes Using Partial Convolutions
-https://doi.org/10.48550/arXiv.1806.03589 : Free-Form Image Inpainting with Gated Convolution
-https://doi.org/10.48550/arXiv.1902.06838 : SC-FEGAN: Face Editing Generative Adversarial Network with User’s Sketch and Color
+https://doi.org/10.48550/arXiv.1806.03589 : Free-Form Image Inpainting with Gated Convolution                                                   https://doi.org/10.48550/arXiv.1902.06838 : SC-FEGAN: Face Editing Generative Adversarial Network with User’s Sketch and Color
