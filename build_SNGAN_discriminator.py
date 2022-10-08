@@ -1,7 +1,8 @@
 import tensorflow as tf
 from keras.layers import Conv2D,LeakyReLU,Input
 from keras.models import Model
-from sn import SpectralNormalization
+from spectral_normalization import SpectralNormalization
+from gated_conv import Gated_Convolutional
 
 
 inputs = Input(shape=(512,512,3))
