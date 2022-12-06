@@ -7,7 +7,7 @@ Edit face images using a a deep neural network. Users can edit face images using
 ![Screenshot 2022-10-07 143237](https://user-images.githubusercontent.com/112108580/194565759-d37afb86-642a-444f-8301-b4cb756376d5.png)
 
 ## Dependencies
-tensorflow 
+# . tensorflow 
 tensorflow_io
 numpy
 Python3
