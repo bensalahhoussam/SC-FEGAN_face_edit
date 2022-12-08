@@ -23,7 +23,7 @@ The network trains generator and discriminator simultaneously. The generator rec
 * Matplotlib
 * TQDM
 * OpenCV
-* 
+
 ## How to Use
 * Prepare dataset path in 'path_file.py' to generate training images file list.
 * Set the training path and validation path in 'path_file.py'
