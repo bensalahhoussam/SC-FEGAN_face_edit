@@ -16,7 +16,6 @@ The network trains generator and discriminator simultaneously. The generator rec
 
 
 
-
 ## Dependencies
 * Python 3
 * Tensorflow 2.x
@@ -25,6 +24,11 @@ The network trains generator and discriminator simultaneously. The generator rec
 * TQDM
 * OpenCV
 
+## How to Use
+* Prepare dataset path in 'path_file.py' to generate training images file list.
+* Set the training path and validation path in 'path_file.py'
+* Run 'python SNGAN_train.py'
+* To run the model in multi GPU run 'SN_GAN_train_GPU.py'
 
 ## References 
 * https://doi.org/10.48550/arXiv.1804.07723 : Image Inpainting for Irregular Holes Using Partial Convolutions
