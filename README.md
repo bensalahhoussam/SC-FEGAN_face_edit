@@ -14,6 +14,7 @@ is based on SN-patchGAN.
 
 The network trains generator and discriminator simultaneously. The generator receives incomplete images with user input to create an output imageinthe RGB channel,and inserts the masked area of the output image into the incomplete input image to create a complete image. The discriminator receives either a completed image or an original image (without masking) to determine whether the given input is real or fake.
 
+![Screenshot 2022-12-08 071704](https://user-images.githubusercontent.com/112108580/206514321-b17b1258-d8a5-485c-9c76-62eb00ce8cfe.png)
 
 
 ## Dependencies
